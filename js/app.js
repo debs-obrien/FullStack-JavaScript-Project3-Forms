@@ -91,57 +91,56 @@ const availableActivities = () => {
     option.disabled = false;
   }
   //function to check if checked, disable options of same time and call calcualte price
-  const checkIfChecked = (checkedOption, disabledOption1, disabledOption2, workshopPrice) => {
+  const checkIfChecked = (checkedOption, price) => {
     checkedOption.addEventListener('change', () => {
-      checkedOption.checked ? disable(disabledOption1) : enable(disabledOption1);
-      checkedOption.checked ? disable(disabledOption2) : enable(disabledOption2);
+      calculatePrice(checkedOption, price);
+    });
+  }
+  const disableIfChecked = (checkedOption, disabledOption) => {
+    checkedOption.addEventListener('change', () => {
+      checkedOption.checked ? disable(disabledOption) : enable(disabledOption);
       calculatePrice(checkedOption, workshopPrice);
     });
   }
   //call the activitiesPrice function to append price div
     activitiesPrice();
 
+    //listen for changes to click and calcualte price
+    checkIfChecked(mainConference, mainConfPrice);
+    checkIfChecked(buildTools, workshopPrice);
+    checkIfChecked(npm, workshopPrice);
     //listen for changes to click, disable checkboxes and calcualte price
-    mainConference.addEventListener('change', () => {
-      calculatePrice(mainConference, mainConfPrice);
-    });
-    checkIfChecked(jsFrameworks, express, buildTools, workshopPrice);
-    checkIfChecked(jsLibs, node, npm, workshopPrice);
-    checkIfChecked(express, jsFrameworks, buildTools, workshopPrice);
-    checkIfChecked(node, express, npm, workshopPrice);
-    checkIfChecked(buildTools, jsFrameworks, express, workshopPrice);
-    checkIfChecked(npm, node, jsLibs, workshopPrice);
-
+    disableIfChecked(jsFrameworks, express);
+    disableIfChecked(jsLibs, node);
+    disableIfChecked(express, jsFrameworks);
+    disableIfChecked(node, jsLibs);
 };
 
 
-//prevent user from sending the form
-//form.preventDefault()
-$('#cc-num').after('<div class="cc_num-toosmall">CardNumber should have a min of 13 numbers</div>')
-$('#cc-num').after('<div class="cc_num-toolong">credit cards should only have a max of 16 numbers</div>');
-$('#cc-num').after('<div class="cc_num-number">Emm it should be numbers only</div>');
-$('.cc_num-toosmall').hide();
-$('.cc_num-toolong').hide();
-$('.cc_num-number').hide();
+const paymentMethods = () => {
+  const paymentMethod = document.getElementById('payment');
+  const creditCard = document.getElementById('credit-card');
+  const bitcoin = document.getElementById('bitcoin');
+  const paypal = document.getElementById('paypal');
+  bitcoin.style.display = 'none';
+  paypal.style.display = 'none';
 
-
-function ccNumberEvent(){
-  const ccValue = $('#cc-num').val().length;
-  if(ccValue >=13 && ccValue <=16){
-    $('.cc_num-toosmall').hide();
-    $('.cc_num-toolong').hide();
-    $('.cc_num-number').hide();
-  }else if(ccValue < 13){
-    $('.cc_num-toosmall').show();
-  }else if(ccValue > 16){
-    $('.cc_num-toolong').show();
-    $('.cc_num-toosmall').hide();
-    $('.cc_num-number').hide();
-  }else if($(this).val().isInteger(false)){
-    $('.cc_num-toolong').hide();
-    $('.cc_num-toosmall').hide();
-    $('.cc_num-number').show();
-  }
+  paymentMethod.addEventListener('change', () => {
+    if(paymentMethod.value === 'select_method' || paymentMethod.value === 'credit card') {
+      creditCard.style.display = 'block';
+      bitcoin.style.display = 'none';
+      paypal.style.display = 'none';
+      //hide others
+    }else if(paymentMethod.value === 'paypal'){
+      paypal.style.display = 'block';
+      creditCard.style.display = 'none';
+      bitcoin.style.display = 'none';
+    }else if(paymentMethod.value === 'bitcoin'){
+      bitcoin.style.display = 'block';
+      paypal.style.display = 'none';
+      creditCard.style.display = 'none';
+    }
+  });
 }
 
 
@@ -149,5 +148,4 @@ function ccNumberEvent(){
 hideColors();
 addTitle();
 availableActivities();
-
-$('#cc-num').focus(ccNumberEvent).keyup(ccNumberEvent);
+paymentMethods();
