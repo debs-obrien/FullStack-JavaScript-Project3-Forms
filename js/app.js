@@ -1,23 +1,19 @@
 //set focus to name field on load
 document.getElementById('name').focus();
 
-const title = document.getElementById('title');
-
 //add text field when Job Role of option is selected
-title.addEventListener('change', (e) => {
-  if(title.value === 'other') {
-    const input = document.createElement('input');
-    input.type = 'text';
-    input.id = 'other-title';
-    input.placeholder = 'Your Job Role';
-    title.parentNode.insertBefore(input, title.nextSibling);
-//just for testing purposes to see if we get the value of the input
-    input.addEventListener('keyup', (e) => {
-      //console.log(input.value);
-    })
-  }
-});
-
+const addTitle = () => {
+  const title = document.getElementById('title');
+  title.addEventListener('change', (e) => {
+    if(title.value === 'other') {
+      const input = document.createElement('input');
+      input.type = 'text';
+      input.id = 'other-title';
+      input.placeholder = 'Your Job Role';
+      title.parentNode.insertBefore(input, title.nextSibling);
+    }
+  });
+}
 
 //hide all other colors only show ones we want
 const hideColors = () => {
@@ -47,10 +43,87 @@ const hideColors = () => {
 
   });
 }
-hideColors();
 
-
+const mainConference = document.getElementsByName('all')[0];
+const jsFrameworks = document.getElementsByName('js-frameworks')[0];
+const jsLibs = document.getElementsByName('js-libs')[0];
+const express = document.getElementsByName('express')[0];
+const node = document.getElementsByName('node')[0];
+const buildTools = document.getElementsByName('build-tools')[0];
+const npm = document.getElementsByName('npm')[0];
+const price = document.createElement('div');
 //dont allow selection if same date/time
+const availableActivities = () => {
+
+  let totalPrice = 0;
+  let mainConfPrice = 200;
+  let workshopPrice = 100;
+  //create div to hold price
+  const activitiesPrice = () => {
+    price.id = 'price';
+    price.innerHTML = '';
+    npm.parentElement.after(price);
+  }
+  //print the price
+  const printPrice = (totalPrice) => {
+    price.innerHTML = 'Total Price: $' + totalPrice;
+  }
+  //calculate the price
+  const calculatePrice = (option, price) => {
+    if(option.checked){
+      totalPrice += price;
+      printPrice(totalPrice)
+    }else{
+      totalPrice -= price;
+      printPrice(totalPrice)
+    }
+  }
+//function to disable checkbox
+  function disable(option){
+    option.disabled = true;
+  }
+  //function to enable checkbox
+  function enable(option){
+    option.disabled = false;
+  }
+  //call the activitiesPrice function to create price div
+    activitiesPrice();
+    mainConference.addEventListener('change', () => {
+      calculatePrice(mainConference, mainConfPrice);
+    });
+    jsFrameworks.addEventListener('change', () => {
+      jsFrameworks.checked ? disable(express) : enable(express);
+      jsFrameworks.checked ? disable(buildTools) : enable(buildTools);
+      calculatePrice(jsFrameworks, workshopPrice);
+    });
+    express.addEventListener('change', () => {
+      express.checked ? disable(jsFrameworks) : enable(jsFrameworks);
+      express.checked ? disable(buildTools) : enable(buildTools);
+      calculatePrice(express, workshopPrice);
+    });
+    buildTools.addEventListener('change', () => {
+      buildTools.checked ? disable(jsFrameworks) : enable(jsFrameworks);
+      buildTools.checked ? disable(express) : enable(express);
+      calculatePrice(buildTools, workshopPrice);
+    });
+    jsLibs.addEventListener('change', () => {
+      jsLibs.checked ? disable(node) : enable(node);
+      jsLibs.checked ? disable(npm) : enable(npm);
+      calculatePrice(jsLibs, workshopPrice);
+    });
+    node.addEventListener('change', () => {
+      node.checked ? disable(jsLibs) : enable(jsLibs);
+      node.checked ? disable(npm) : enable(npm);
+      calculatePrice(node, workshopPrice);
+    });
+    npm.addEventListener('change', () => {
+      npm.checked ? disable(node) : enable(node);
+      npm.checked ? disable(jsLibs) : enable(jsLibs);
+      calculatePrice(npm, workshopPrice);
+    });
+};
+
+
 
 
 
@@ -83,5 +156,11 @@ function ccNumberEvent(){
     $('.cc_num-number').show();
   }
 }
+
+
+//call all functions
+hideColors();
+addTitle();
+availableActivities();
 
 $('#cc-num').focus(ccNumberEvent).keyup(ccNumberEvent);
