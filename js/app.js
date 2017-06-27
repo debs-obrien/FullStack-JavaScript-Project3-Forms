@@ -44,29 +44,33 @@ const hideColors = () => {
   });
 }
 
-const mainConference = document.getElementsByName('all')[0];
-const jsFrameworks = document.getElementsByName('js-frameworks')[0];
-const jsLibs = document.getElementsByName('js-libs')[0];
-const express = document.getElementsByName('express')[0];
-const node = document.getElementsByName('node')[0];
-const buildTools = document.getElementsByName('build-tools')[0];
-const npm = document.getElementsByName('npm')[0];
-const price = document.createElement('div');
+
 //dont allow selection if same date/time
 const availableActivities = () => {
-
+  const mainConference = document.getElementsByName('all')[0];
+  const jsFrameworks = document.getElementsByName('js-frameworks')[0];
+  const jsLibs = document.getElementsByName('js-libs')[0];
+  const buildTools = document.getElementsByName('build-tools')[0];
+  const express = document.getElementsByName('express')[0];
+  const node = document.getElementsByName('node')[0];
+  const npm = document.getElementsByName('npm')[0];
+  const price = document.createElement('div');
   let totalPrice = 0;
   let mainConfPrice = 200;
   let workshopPrice = 100;
   //create div to hold price
   const activitiesPrice = () => {
     price.id = 'price';
-    price.innerHTML = '';
     npm.parentElement.after(price);
   }
   //print the price
   const printPrice = (totalPrice) => {
-    price.innerHTML = 'Total Price: $' + totalPrice;
+    if(totalPrice !==0){
+      price.innerHTML = 'Total Price: $' + totalPrice;
+    }
+    else{
+      price.innerHTML = '';
+    }
   }
   //calculate the price
   const calculatePrice = (option, price) => {
@@ -86,46 +90,29 @@ const availableActivities = () => {
   function enable(option){
     option.disabled = false;
   }
-  //call the activitiesPrice function to create price div
+  //function to check if checked, disable options of same time and call calcualte price
+  const checkIfChecked = (checkedOption, disabledOption1, disabledOption2, workshopPrice) => {
+    checkedOption.addEventListener('change', () => {
+      checkedOption.checked ? disable(disabledOption1) : enable(disabledOption1);
+      checkedOption.checked ? disable(disabledOption2) : enable(disabledOption2);
+      calculatePrice(checkedOption, workshopPrice);
+    });
+  }
+  //call the activitiesPrice function to append price div
     activitiesPrice();
+
+    //listen for changes to click, disable checkboxes and calcualte price
     mainConference.addEventListener('change', () => {
       calculatePrice(mainConference, mainConfPrice);
     });
-    jsFrameworks.addEventListener('change', () => {
-      jsFrameworks.checked ? disable(express) : enable(express);
-      jsFrameworks.checked ? disable(buildTools) : enable(buildTools);
-      calculatePrice(jsFrameworks, workshopPrice);
-    });
-    express.addEventListener('change', () => {
-      express.checked ? disable(jsFrameworks) : enable(jsFrameworks);
-      express.checked ? disable(buildTools) : enable(buildTools);
-      calculatePrice(express, workshopPrice);
-    });
-    buildTools.addEventListener('change', () => {
-      buildTools.checked ? disable(jsFrameworks) : enable(jsFrameworks);
-      buildTools.checked ? disable(express) : enable(express);
-      calculatePrice(buildTools, workshopPrice);
-    });
-    jsLibs.addEventListener('change', () => {
-      jsLibs.checked ? disable(node) : enable(node);
-      jsLibs.checked ? disable(npm) : enable(npm);
-      calculatePrice(jsLibs, workshopPrice);
-    });
-    node.addEventListener('change', () => {
-      node.checked ? disable(jsLibs) : enable(jsLibs);
-      node.checked ? disable(npm) : enable(npm);
-      calculatePrice(node, workshopPrice);
-    });
-    npm.addEventListener('change', () => {
-      npm.checked ? disable(node) : enable(node);
-      npm.checked ? disable(jsLibs) : enable(jsLibs);
-      calculatePrice(npm, workshopPrice);
-    });
+    checkIfChecked(jsFrameworks, express, buildTools, workshopPrice);
+    checkIfChecked(jsLibs, node, npm, workshopPrice);
+    checkIfChecked(express, jsFrameworks, buildTools, workshopPrice);
+    checkIfChecked(node, express, npm, workshopPrice);
+    checkIfChecked(buildTools, jsFrameworks, express, workshopPrice);
+    checkIfChecked(npm, node, jsLibs, workshopPrice);
+
 };
-
-
-
-
 
 
 //prevent user from sending the form
