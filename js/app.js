@@ -2,8 +2,21 @@
 document.getElementById('name').focus();
 
 const form = document.querySelector('form');
+const submit = document.querySelector('button');
 const npm = document.getElementsByName('npm')[0];
 const activityError = document.createElement('div');
+const name = document.getElementById('name');
+const basicInfo = name.parentElement;
+const nameError = document.createElement('div')
+const email = document.getElementById('mail');
+const emailError = document.createElement('div')
+const ccNum = document.getElementById('cc-num');
+const ccParent = document.getElementById('credit-card');
+const ccNumError = document.createElement('div');
+const zip = document.getElementById('zip');
+const zipError = document.createElement('div')
+const cvv = document.getElementById('cvv');
+const cvvError = document.createElement('div')
 let numOfActivities = 0;
 
 //display text field only when Job Role of option is selected
@@ -60,7 +73,7 @@ const checkActivities = (checkedOption, activity) => {
   }
 }
 
-
+//create error message if no activities selected
 const activitiesError = () => {
   if(numOfActivities === 0){
     npm.parentElement.after(activityError);
@@ -154,142 +167,133 @@ const paymentMethods = () => {
   paypal.style.display = 'none';
 
   paymentMethod.addEventListener('change', () => {
+    bitcoin.style.display = 'none';
+    paypal.style.display = 'none';
     if(paymentMethod.value === 'select_method' || paymentMethod.value === 'credit card') {
       creditCard.style.display = 'block';
-      bitcoin.style.display = 'none';
-      paypal.style.display = 'none';
       //hide others
     }else if(paymentMethod.value === 'paypal'){
       paypal.style.display = 'block';
       creditCard.style.display = 'none';
-      bitcoin.style.display = 'none';
     }else if(paymentMethod.value === 'bitcoin'){
       bitcoin.style.display = 'block';
-      paypal.style.display = 'none';
       creditCard.style.display = 'none';
     }
   });
 }
-//prevent user from submitting form
-document.querySelector('form').addEventListener('submit', (e) => {
-  e.preventDefault();
-})
 
+//empty field validation
+function ifEmpty(input, error, errorMessage){
+  if(input.value === ''){
+    errorMessages(input, error, errorMessage);
+  }else{
+    clearErrorMessage(input, error)
+  }
+}
 
-form.addEventListener('click', () => {
-  activitiesError();
-})
+//function for error Messages
+function errorMessages(input, errorDiv, errorMessage){
+  errorDiv.textContent = errorMessage;
+  errorDiv.className = 'error-message';
+  input.className = 'error';
+}
+//function to clear error Messages
+function clearErrorMessage(input, errorDiv){
+  errorDiv.textContent = '';
+  errorDiv.className = '';
+  input.className = '';
+}
+//validate Name
 
-
-
-const validateFrom = () => {
-  const name = document.getElementById('name');
-  const basicInfo = name.parentElement;
-  const nameError = document.createElement('div')
-  nameError.textContent = '';
+const validateName = () => {
   basicInfo.insertBefore(nameError, name);
-  //function for error Messages
-  function errorMessages(input, errorDiv, errorMessage){
-    errorDiv.textContent = errorMessage;
-    errorDiv.className = 'error-message';
-    input.className = 'error';
-  }
-  //function to clear error Messages
-  function clearErrorMessage(input, errorDiv){
-    errorDiv.textContent = '';
-    errorDiv.className = '';
-    input.className = '';
-  }
-  //validate Name
-  name.addEventListener('blur', (e) => {
-    if(name.value === ''){
-      errorMessages(name, nameError, 'You must fill in in your name');
-    }else{
-      clearErrorMessage(name, nameError)
-    }
-  })
-  //validate email
-  const email = document.getElementById('mail');
-  const emailError = document.createElement('div')
-  emailError.textContent = '';
+    ifEmpty(name, nameError, 'You must fill in in your name');
+}
+//validate email
+const validateEmail = () => {
   basicInfo.insertBefore(emailError, email);
   const regex = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
-  email.addEventListener('blur', () => {
-    if(email.value === ''){
-      errorMessages(email, emailError, 'You must fill in in your email');
-    }
-  })
-  email.addEventListener('keyup', () => {
-    if(!regex.test(email.value)){
-      errorMessages(email, emailError, 'Plese type a valid address eg email@email.com');
-    }else{
-      clearErrorMessage(email, emailError)
-    }
-  })
+      if(!regex.test(email.value)){
+        errorMessages(email, emailError, 'Plese type a valid address eg email@email.com');
+      }else{
+        clearErrorMessage(email, emailError);
+      }
+}
 //validate cc Number
-  const ccNum = document.getElementById('cc-num');
-  const ccNumError = document.createElement('div')
-  ccNumError.textContent = '';
-  const ccParent = document.getElementById('credit-card');
-  ccParent.insertBefore(ccNumError, ccNum.parentElement);
-  ccNum.addEventListener('blur', () => {
-    if(ccNum.value === ''){
-      errorMessages(ccNum, ccNumError, 'you must add your credit card number or choose another payment type');
-    }
-  })
-  ccNum.addEventListener('keyup', () => {
-    if(ccNum.value.length < 13){
-      errorMessages(ccNum, ccNumError, 'Your credit car number is not long enough');
-    }else if(ccNum.value.length > 16){
-      errorMessages(ccNum, ccNumError, 'your credit card number is too long');
-
-    }else{
-      clearErrorMessage(ccNum, ccNumError)
-    }
-  })
+const validateCCNum = () => {
+    ccParent.insertBefore(ccNumError, ccNum.parentElement);
+      if(ccNum.value.length < 13){
+        errorMessages(ccNum, ccNumError, 'Your credit car number is not long enough');
+      }else if(ccNum.value.length > 16){
+        errorMessages(ccNum, ccNumError, 'your credit card number is too long');
+      }else{
+        clearErrorMessage(ccNum, ccNumError);
+      }
+}
 //validate zip
-  const zip = document.getElementById('zip');
-  const zipError = document.createElement('div')
-  zipError.textContent = '';
-  ccParent.insertBefore(zipError, ccNum.parentElement);
-  zip.addEventListener('blur', () => {
-    if(zip.value === ''){
-      errorMessages(zip, zipError, 'you must add your zip number');
-    }
-  })
-  zip.addEventListener('keyup', () => {
-    if(zip.value.length < 5){
-      errorMessages(zip, zipError, 'Your zip code is not long enough');
-    }else if(zip.value.length > 5){
-      errorMessages(zip, zipError, 'your zip code is too long');
-    }else{
-      clearErrorMessage(zip, zipError)
-    }
-  })
-  //validate cvv
-  const cvv = document.getElementById('cvv');
-  const cvvError = document.createElement('div')
-  cvvError.textContent = '';
+const validateZip = () => {
+    ccParent.insertBefore(zipError, ccNum.parentElement);
+      if(zip.value.length < 5){
+        errorMessages(zip, zipError, 'Your zip code is not long enough');
+      }else if(zip.value.length > 5){
+        errorMessages(zip, zipError, 'your zip code is too long');
+      }else{
+        clearErrorMessage(zip, zipError);
+      }
+}
+//validate cvv
+const validateCvv = () => {
   ccParent.insertBefore(cvvError, ccNum.parentElement);
-  cvv.addEventListener('blur', () => {
-    if(cvv.value === ''){
-      errorMessages(cvv, cvvError, 'you must add your cvv number');
-    }
-  })
-  cvv.addEventListener('keyup', () => {
     if(cvv.value.length < 3){
       errorMessages(cvv, cvvError, 'Your cvv number is not long enough');
     }else if(cvv.value.length > 3){
       errorMessages(cvv, cvvError, 'your cvv number is too long');
     }else{
-      clearErrorMessage(cvv, cvvError)
+      clearErrorMessage(cvv, cvvError);
     }
-  })
 }
+name.addEventListener('blur', () => {
+  validateName();
+})
+email.addEventListener('keyup', () => {
+  validateEmail();
+})
+ccNum.addEventListener('keyup', () => {
+  validateCCNum();
+})
+zip.addEventListener('keyup', () => {
+  validateZip();
+})
+cvv.addEventListener('keyup', () => {
+  validateCvv();
+})
+
+const validateAll = () => {
+  validateName();
+  validateEmail();
+  validateCCNum();
+  validateZip();
+  validateCvv();
+}
+
+const validateFrom = () => {
+  activitiesError();
+  ifEmpty(name, nameError, 'You must fill in in your name');
+  ifEmpty(email, emailError, 'You must fill in in your email');
+  ifEmpty(ccNum, ccNumError, 'you must add your credit card number or choose another payment type');
+  ifEmpty(zip, zipError, 'you must add your zip number');
+  ifEmpty(cvv, cvvError, 'you must add your cvv number');
+}
+
 
 //call all functions
 hideColors();
 addTitle();
 availableActivities();
 paymentMethods();
-validateFrom();
+
+
+submit.addEventListener('click', (e) => {
+  e.preventDefault();  //prevent user from submitting form
+  validateFrom();
+})
