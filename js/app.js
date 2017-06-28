@@ -1,3 +1,8 @@
+/*
+created by Debbie O'Brien 28 June 2017
+Form validation project for javascript Full Stack
+ */
+
 //set focus to name field on load
 document.getElementById('name').focus();
 
