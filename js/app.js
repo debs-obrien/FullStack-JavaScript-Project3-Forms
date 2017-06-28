@@ -31,7 +31,7 @@ let empty = true;
 let nameValid = false;
 let emailValid = false;
 let activityValid = false;
-let ccNumValid= false;
+let ccNumValid = false;
 let zipValid = false;
 let cvvValid = false;
 
@@ -42,9 +42,9 @@ const addTitle = () => {
   otherTitle.style.display = "none";
 
   title.addEventListener('change', (e) => {
-    if(title.value === 'other') {
+    if (title.value === 'other') {
       otherTitle.style.display = "block";
-    }else{
+    } else {
       otherTitle.style.display = "none";
     }
   });
@@ -60,16 +60,16 @@ const hideColors = () => {
   colorDiv.style.display = 'none';
 
   design.addEventListener('change', () => {
-    if(design.value.includes('Select Theme')){
+    if (design.value.includes('Select Theme')) {
       colorDiv.style.display = 'none';
-    }else{
+    } else {
       colorDiv.style.display = 'block';
-      if(design.value.includes('js puns')){
+      if (design.value.includes('js puns')) {
         color.innerHTML = '<option value="cornflowerblue">Cornflower Blue (JS Puns shirt only)</option>'
         color.innerHTML += '<option value="darkslategrey">Dark Slate Grey (JS Puns shirt only)</option>'
         color.innerHTML += '<option value="gold">Gold (JS Puns shirt only)</option>';
 
-      }else if(design.value.includes('heart js')){
+      } else if (design.value.includes('heart js')) {
         color.innerHTML = '<option value="tomato">Tomato (I &#9829; JS shirt only)</option>'
         color.innerHTML += '<option value="steelblue">Steel Blue (I &#9829; JS shirt only)</option>'
         color.innerHTML += '<option value="dimgrey">Dim Grey (I &#9829; JS shirt only)</option>';
@@ -80,22 +80,22 @@ const hideColors = () => {
 }
 //check if there are activities selected
 const checkActivities = (checkedOption, activity) => {
-  if(checkedOption.checked){
-    numOfActivities +=1;
+  if (checkedOption.checked) {
+    numOfActivities += 1;
     activityError.remove();
-  }else{
-    numOfActivities -=1
+  } else {
+    numOfActivities -= 1
     activitiesError();
   }
 }
 
 //create error message if no activities selected
 const activitiesError = () => {
-  if(numOfActivities === 0){
+  if (numOfActivities === 0) {
     npm.parentElement.after(activityError);
     activityError.textContent = 'You need to select an activity';
     activityError.className = 'error-message';
-  }else{
+  } else {
     activityValid = true;
   }
 }
@@ -120,29 +120,28 @@ const availableActivities = () => {
   }
   //print the price
   const printPrice = (totalPrice) => {
-    if(totalPrice !==0){
+    if (totalPrice !== 0) {
       price.innerHTML = 'Total Price: $' + totalPrice;
-    }
-    else{
+    } else {
       price.innerHTML = '';
     }
   }
   //calculate the price
   const calculatePrice = (option, price) => {
-    if(option.checked){
+    if (option.checked) {
       totalPrice += price;
       printPrice(totalPrice)
-    }else{
+    } else {
       totalPrice -= price;
       printPrice(totalPrice)
     }
   }
   //function to disable checkbox
-  function disable(option){
+  function disable(option) {
     option.disabled = true;
   }
   //function to enable checkbox
-  function enable(option){
+  function enable(option) {
     option.disabled = false;
   }
   //function to check if checked and calcualte price
@@ -163,17 +162,17 @@ const availableActivities = () => {
     });
   }
   //call the activitiesPrice function to append price div
-    activitiesPrice();
+  activitiesPrice();
 
-    //listen for changes to click and calcualte price
-    checkIfChecked(mainConference, mainConfPrice);
-    checkIfChecked(buildTools, workshopPrice);
-    checkIfChecked(npm, workshopPrice);
-    //listen for changes to click, disable checkboxes and calcualte price
-    disableIfChecked(jsFrameworks, express);
-    disableIfChecked(jsLibs, node);
-    disableIfChecked(express, jsFrameworks);
-    disableIfChecked(node, jsLibs);
+  //listen for changes to click and calcualte price
+  checkIfChecked(mainConference, mainConfPrice);
+  checkIfChecked(buildTools, workshopPrice);
+  checkIfChecked(npm, workshopPrice);
+  //listen for changes to click, disable checkboxes and calcualte price
+  disableIfChecked(jsFrameworks, express);
+  disableIfChecked(jsLibs, node);
+  disableIfChecked(express, jsFrameworks);
+  disableIfChecked(node, jsLibs);
 };
 
 //hide or show payment methods depending on selection
@@ -186,97 +185,104 @@ const paymentMethods = () => {
   paypal.style.display = 'none';
 
   paymentMethod.addEventListener('change', () => {
-    bitcoin.style.display = 'none';
-    paypal.style.display = 'none';
-    if(paymentMethod.value === 'select_method' || paymentMethod.value === 'credit card') {
-      creditCard.style.display = 'block';
-      //hide others
-    }else if(paymentMethod.value === 'paypal'){
-      paypal.style.display = 'block';
-      creditCard.style.display = 'none';
-    }else if(paymentMethod.value === 'bitcoin'){
-      bitcoin.style.display = 'block';
-      creditCard.style.display = 'none';
-    }
     //if other payment method chosen set credit card Validation to true
-    if(paymentMethod.value === 'bitcoin' || paymentMethod.value === 'paypal'){
-      ccNumValid= true;
+    if (paymentMethod.value === 'bitcoin' || paymentMethod.value === 'paypal') {
+      ccNumValid = true;
       zipValid = true;
       cvvValid = true;
     }
+    bitcoin.style.display = 'none';
+    paypal.style.display = 'none';
+    if (paymentMethod.value === 'select_method' || paymentMethod.value === 'credit card') {
+      creditCard.style.display = 'block';
+      //hide others
+    } else if (paymentMethod.value === 'paypal') {
+      paypal.style.display = 'block';
+      creditCard.style.display = 'none';
+    } else if (paymentMethod.value === 'bitcoin') {
+      bitcoin.style.display = 'block';
+      creditCard.style.display = 'none';
+    }
+
   });
 }
 
 //empty field validation
-function ifEmpty(input, errorDiv, errorMessage){
-  if(input.value === ''){
+function ifEmpty(input, errorDiv, errorMessage) {
+  if (input.value === '') {
     errorMessages(input, errorDiv, errorMessage);
-  }else{
+  } else {
     clearErrorMessage(input, errorDiv)
   }
 }
 
 //function for error Messages
-function errorMessages(input, errorDiv, errorMessage){
+function errorMessages(input, errorDiv, errorMessage) {
   errorDiv.textContent = errorMessage;
   errorDiv.className = 'error-message';
   input.className = 'error';
 }
 //function to clear error Messages
-function clearErrorMessage(input, errorDiv){
+function clearErrorMessage(input, errorDiv) {
   errorDiv.textContent = '';
   errorDiv.className = '';
   input.className = '';
 }
 //validate Name
 const validateName = () => {
-    ifEmpty(name, nameError, 'You must fill in in your name');
-    if(name.value !==0){
-      nameValid = true;
-    }
+  ifEmpty(name, nameError, 'You must fill in in your name');
+  if (name.value !== '') {
+    nameValid = true;
+  }
 }
 //validate email
 const validateEmail = () => {
   const regex = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
-      if(!regex.test(email.value)){
-        errorMessages(email, emailError, 'Plese type a valid address eg email@email.com');
-      }else{
-        clearErrorMessage(email, emailError);
-        emailValid = true;
-      }
+  if (!regex.test(email.value)) {
+    errorMessages(email, emailError, 'Plese type a valid address eg email@email.com');
+  } else {
+    clearErrorMessage(email, emailError);
+    emailValid = true;
+  }
 }
 //validate cc Number
 const validateCCNum = () => {
-      if(ccNum.value.length < 13){
-        errorMessages(ccNum, ccNumError, 'Your credit car number is not long enough');
-      }else if(ccNum.value.length > 16){
-        errorMessages(ccNum, ccNumError, 'your credit card number is too long');
-      }else{
-        clearErrorMessage(ccNum, ccNumError);
-        ccNumValid= true;
-      }
+  if (isNaN(ccNum.value)) {
+    errorMessages(ccNum, ccNumError, 'Credit Card numbers need to be a number');
+  } else if (ccNum.value.length < 13) {
+    errorMessages(ccNum, ccNumError, 'Your credit car number needs to be min 13 digits');
+  } else if (ccNum.value.length > 16) {
+    errorMessages(ccNum, ccNumError, 'your credit card number needs to be max 16 digits');
+  } else {
+    clearErrorMessage(ccNum, ccNumError);
+    ccNumValid = true;
+  }
 }
 //validate zip
 const validateZip = () => {
-      if(zip.value.length < 5){
-        errorMessages(zip, zipError, 'Your zip code is not long enough');
-      }else if(zip.value.length > 5){
-        errorMessages(zip, zipError, 'your zip code is too long');
-      }else{
-        clearErrorMessage(zip, zipError);
-        zipValid = true;
-      }
+  if (isNaN(zip.value)) {
+    errorMessages(zip, zipError, 'zips need to be a number');
+  } else if (zip.value.length < 5) {
+    errorMessages(zip, zipError, 'Your zip code needs to be min 5 digits');
+  } else if (zip.value.length > 5) {
+    errorMessages(zip, zipError, 'your zip code needs to be max 5 digits');
+  } else {
+    clearErrorMessage(zip, zipError);
+    zipValid = true;
+  }
 }
 //validate cvv
 const validateCvv = () => {
-    if(cvv.value.length < 3){
-      errorMessages(cvv, cvvError, 'Your cvv number is not long enough');
-    }else if(cvv.value.length > 3){
-      errorMessages(cvv, cvvError, 'your cvv number is too long');
-    }else{
-      clearErrorMessage(cvv, cvvError);
-      cvvValid = true;
-    }
+  if (isNaN(cvv.value)) {
+    errorMessages(cvv, cvvError, 'cvv needs to be a number');
+  } else if (cvv.value.length < 3) {
+    errorMessages(cvv, cvvError, 'Your cvv number needs to be max 3 digits');
+  } else if (cvv.value.length > 3) {
+    errorMessages(cvv, cvvError, 'your cvv number needs to be min 3 digits');
+  } else {
+    clearErrorMessage(cvv, cvvError);
+    cvvValid = true;
+  }
 }
 name.addEventListener('blur', () => {
   validateName();
@@ -302,16 +308,16 @@ const validateFrom = () => {
   ifEmpty(zip, zipError, 'you must add your zip number');
   ifEmpty(cvv, cvvError, 'you must add your cvv number');
   //if fields are not empty validate further
-  if(email.value !== ''){
+  if (email.value !== '') {
     validateEmail();
   }
-  if(ccNum.value !== ''){
+  if (ccNum.value !== '') {
     validateCCNum();
   }
-  if(zip.value !== ''){
+  if (zip.value !== '') {
     validateZip();
   }
-  if(cvv.value !== ''){
+  if (cvv.value !== '') {
     validateCvv();
   }
 }
@@ -325,9 +331,11 @@ paymentMethods();
 //submit form on click if everything validates
 submit.addEventListener('click', (e) => {
   //let allFields = fields requred to be validated
-  let allValid = nameValid  && emailValid && activityValid && zipValid && ccNumValid  && cvvValid;
-  if(!allValid){ //if not true prevent submit and call validate
+  let allValid = nameValid && emailValid && activityValid && zipValid && ccNumValid && cvvValid;
+  if (!allValid) { //if not true prevent submit and call validate
+e.preventDefault();
     validateFrom();
-    e.preventDefault();
+
+  }else{
   }
 })
