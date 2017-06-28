@@ -231,7 +231,9 @@ function clearErrorMessage(input, errorDiv){
 //validate Name
 const validateName = () => {
     ifEmpty(name, nameError, 'You must fill in in your name');
-    nameValid = true;
+    if(name.value !==0){
+      nameValid = true;
+    }
 }
 //validate email
 const validateEmail = () => {
