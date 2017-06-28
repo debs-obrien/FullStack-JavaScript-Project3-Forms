@@ -25,6 +25,7 @@ basicInfo.insertBefore(emailError, email);
 ccParent.insertBefore(ccNumError, ccNum.parentElement);
 ccParent.insertBefore(zipError, ccNum.parentElement);
 ccParent.insertBefore(cvvError, ccNum.parentElement);
+//set values
 let numOfActivities = 0;
 let empty = true;
 let nameValid = false;
@@ -33,7 +34,6 @@ let activityValid = false;
 let ccNumValid= false;
 let zipValid = false;
 let cvvValid = false;
-let ccCardValid = false;
 
 //display text field only when Job Role of option is selected
 const addTitle = () => {
@@ -137,7 +137,7 @@ const availableActivities = () => {
       printPrice(totalPrice)
     }
   }
-//function to disable checkbox
+  //function to disable checkbox
   function disable(option){
     option.disabled = true;
   }
@@ -145,7 +145,7 @@ const availableActivities = () => {
   function enable(option){
     option.disabled = false;
   }
-  //function to check if checked, disable options of same time and call calcualte price
+  //function to check if checked and calcualte price
   const checkIfChecked = (checkedOption, price) => {
     checkedOption.addEventListener('change', () => {
       checkedOption.setAttribute("checked", "checked");
@@ -153,6 +153,7 @@ const availableActivities = () => {
       calculatePrice(checkedOption, price);
     });
   }
+  //function to check if checked, disable options of same time and call calcualte price
   const disableIfChecked = (checkedOption, disabledOption) => {
     checkedOption.addEventListener('change', () => {
       checkedOption.setAttribute("checked", "checked");
@@ -193,12 +194,12 @@ const paymentMethods = () => {
     }else if(paymentMethod.value === 'paypal'){
       paypal.style.display = 'block';
       creditCard.style.display = 'none';
-      ccNumValid= true;
-      zipValid = true;
-      cvvValid = true;
     }else if(paymentMethod.value === 'bitcoin'){
       bitcoin.style.display = 'block';
       creditCard.style.display = 'none';
+    }
+    //if other payment method chosen set credit card Validation to true
+    if(paymentMethod.value === 'bitcoin' || paymentMethod.value === 'paypal'){
       ccNumValid= true;
       zipValid = true;
       cvvValid = true;
@@ -228,7 +229,6 @@ function clearErrorMessage(input, errorDiv){
   input.className = '';
 }
 //validate Name
-
 const validateName = () => {
     ifEmpty(name, nameError, 'You must fill in in your name');
     nameValid = true;
@@ -320,13 +320,11 @@ addTitle();
 availableActivities();
 paymentMethods();
 
-
+//submit form on click if everything validates
 submit.addEventListener('click', (e) => {
-  validateFrom();
-  //let allFields =
-  if(nameValid  && emailValid && activityValid && zipValid && ccNumValid  && cvvValid){
-
-  }else{
+  //let allFields = fields requred to be validated
+  let allValid = nameValid  && emailValid && activityValid && zipValid && ccNumValid  && cvvValid;
+  if(!allValid){ //if not true prevent submit and call validate
     validateFrom();
     e.preventDefault();
   }
