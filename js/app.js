@@ -7,12 +7,15 @@ const submit = document.querySelector('button');
 const npm = document.getElementsByName('npm')[0];
 const name = document.getElementById('name');
 const email = document.getElementById('mail');
+const title = document.getElementById('title');
+const otherTitle = document.getElementById('other-title');
 const ccNum = document.getElementById('cc-num');
 const zip = document.getElementById('zip');
 const cvv = document.getElementById('cvv');
 //create divs for error messages
 const nameError = document.createElement('div')
 const emailError = document.createElement('div');
+const jobError = document.createElement('div');
 const activityError = document.createElement('div');
 const ccNumError = document.createElement('div');
 const zipError = document.createElement('div');
@@ -22,6 +25,7 @@ const basicInfo = name.parentElement;
 const ccParent = document.getElementById('credit-card');
 basicInfo.insertBefore(nameError, name);
 basicInfo.insertBefore(emailError, email);
+otherTitle.after(jobError);
 ccParent.insertBefore(ccNumError, ccNum.parentElement);
 ccParent.insertBefore(zipError, ccNum.parentElement);
 ccParent.insertBefore(cvvError, ccNum.parentElement);
@@ -30,6 +34,7 @@ let numOfActivities = 0;
 let empty = true;
 let nameValid = false;
 let emailValid = false;
+let jobValid = false;
 let activityValid = false;
 let ccNumValid = false;
 let zipValid = false;
@@ -37,8 +42,6 @@ let cvvValid = false;
 
 //display text field only when Job Role of option is selected
 const addTitle = () => {
-  const title = document.getElementById('title');
-  const otherTitle = document.getElementById('other-title');
   otherTitle.style.display = "none";
 
   title.addEventListener('change', (e) => {
@@ -46,9 +49,11 @@ const addTitle = () => {
       otherTitle.style.display = "block";
     } else {
       otherTitle.style.display = "none";
+      jobValid = true;
     }
   });
 }
+
 
 //hide all other colors only show ones we want
 const hideColors = () => {
@@ -245,6 +250,18 @@ const validateEmail = () => {
     emailValid = true;
   }
 }
+//validate job Role
+const validateJob = () => {
+  if(title.value === 'other' ){
+    if(otherTitle.value === ''){
+      errorMessages(otherTitle, jobError, 'You must fill in your Job Role');
+    }else{
+      jobValid = true;
+      clearErrorMessage(otherTitle, jobError);
+    }
+  }
+}
+
 //validate cc Number
 const validateCCNum = () => {
   if (isNaN(ccNum.value)) {
@@ -290,6 +307,9 @@ name.addEventListener('blur', () => {
 email.addEventListener('keyup', () => {
   validateEmail();
 })
+otherTitle.addEventListener('blur', () => {
+  validateJob();
+})
 ccNum.addEventListener('keyup', () => {
   validateCCNum();
 })
@@ -331,11 +351,9 @@ paymentMethods();
 //submit form on click if everything validates
 submit.addEventListener('click', (e) => {
   //let allFields = fields requred to be validated
-  let allValid = nameValid && emailValid && activityValid && zipValid && ccNumValid && cvvValid;
+  let allValid = nameValid && emailValid && jobValid && activityValid && zipValid && ccNumValid && cvvValid;
   if (!allValid) { //if not true prevent submit and call validate
-e.preventDefault();
+    e.preventDefault();
     validateFrom();
-
-  }else{
   }
 })
