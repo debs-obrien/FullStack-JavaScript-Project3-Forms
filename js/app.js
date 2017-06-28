@@ -1,6 +1,10 @@
 //set focus to name field on load
 document.getElementById('name').focus();
 
+const form = document.querySelector('form');
+const npm = document.getElementsByName('npm')[0];
+const activityError = document.createElement('div');
+let numOfActivities = 0;
 
 //display text field only when Job Role of option is selected
 const addTitle = () => {
@@ -45,7 +49,25 @@ const hideColors = () => {
 
   });
 }
+//check if there are activities selected
+const checkActivities = (checkedOption, activity) => {
+  if(checkedOption.checked){
+    numOfActivities +=1;
+    activityError.remove();
+  }else{
+    numOfActivities -=1
+    activitiesError();
+  }
+}
 
+
+const activitiesError = () => {
+  if(numOfActivities === 0){
+    npm.parentElement.after(activityError);
+    activityError.textContent = 'You need to select an activity';
+    activityError.className = 'error-message';
+  }
+}
 
 //dont allow selection if same date/time
 const availableActivities = () => {
@@ -95,12 +117,16 @@ const availableActivities = () => {
   //function to check if checked, disable options of same time and call calcualte price
   const checkIfChecked = (checkedOption, price) => {
     checkedOption.addEventListener('change', () => {
+      checkedOption.setAttribute("checked", "checked");
+      checkActivities(checkedOption);
       calculatePrice(checkedOption, price);
     });
   }
   const disableIfChecked = (checkedOption, disabledOption) => {
     checkedOption.addEventListener('change', () => {
+      checkedOption.setAttribute("checked", "checked");
       checkedOption.checked ? disable(disabledOption) : enable(disabledOption);
+      checkActivities(checkedOption);
       calculatePrice(checkedOption, workshopPrice);
     });
   }
@@ -150,11 +176,11 @@ document.querySelector('form').addEventListener('submit', (e) => {
 })
 
 
+form.addEventListener('click', () => {
+  activitiesError();
+})
 
 
-// if(totalPrice === 0){
-//   console.log('you must select a checkbox')
-// }
 
 const validateFrom = () => {
   const name = document.getElementById('name');
@@ -162,17 +188,27 @@ const validateFrom = () => {
   const nameError = document.createElement('div')
   nameError.textContent = '';
   basicInfo.insertBefore(nameError, name);
+  //function for error Messages
+  function errorMessages(input, errorDiv, errorMessage){
+    errorDiv.textContent = errorMessage;
+    errorDiv.className = 'error-message';
+    input.className = 'error';
+  }
+  //function to clear error Messages
+  function clearErrorMessage(input, errorDiv){
+    errorDiv.textContent = '';
+    errorDiv.className = '';
+    input.className = '';
+  }
+  //validate Name
   name.addEventListener('blur', (e) => {
     if(name.value === ''){
-      nameError.textContent = 'You must fill in in your name';
-      nameError.className = 'error-message';
-      name.className = 'error';
+      errorMessages(name, nameError, 'You must fill in in your name');
     }else{
-      nameError.textContent = '';
-      nameError.className = '';
-      name.className = '';
+      clearErrorMessage(name, nameError)
     }
   })
+  //validate email
   const email = document.getElementById('mail');
   const emailError = document.createElement('div')
   emailError.textContent = '';
@@ -180,23 +216,17 @@ const validateFrom = () => {
   const regex = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
   email.addEventListener('blur', () => {
     if(email.value === ''){
-      emailError.textContent = 'You must fill in in your email';
-      emailError.className = 'error-message';
-      email.className = 'error';
+      errorMessages(email, emailError, 'You must fill in in your email');
     }
   })
   email.addEventListener('keyup', () => {
     if(!regex.test(email.value)){
-      emailError.textContent = 'Plese type a valid address eg email@email.com';
-      emailError.className = 'error-message';
-      email.className = 'error';
+      errorMessages(email, emailError, 'Plese type a valid address eg email@email.com');
     }else{
-      emailError.textContent = '';
-      emailError.className = '';
-      email.className = '';
+      clearErrorMessage(email, emailError)
     }
   })
-
+//validate cc Number
   const ccNum = document.getElementById('cc-num');
   const ccNumError = document.createElement('div')
   ccNumError.textContent = '';
@@ -204,78 +234,55 @@ const validateFrom = () => {
   ccParent.insertBefore(ccNumError, ccNum.parentElement);
   ccNum.addEventListener('blur', () => {
     if(ccNum.value === ''){
-      ccNumError.textContent = 'you must add your credit card number or choose another payment type';
-      ccNum.className = 'error';
-      ccNumError.className = 'error-message';
+      errorMessages(ccNum, ccNumError, 'you must add your credit card number or choose another payment type');
     }
   })
   ccNum.addEventListener('keyup', () => {
     if(ccNum.value.length < 13){
-      ccNumError.textContent = 'Your credit car number is not long enough';
-      ccNum.className = 'error';
-      ccNumError.className = 'error-message';
+      errorMessages(ccNum, ccNumError, 'Your credit car number is not long enough');
     }else if(ccNum.value.length > 16){
-      ccNumError.textContent = 'your credit card number is too long';
-      ccNum.className = 'error';
-      ccNumError.className = 'error-message';
+      errorMessages(ccNum, ccNumError, 'your credit card number is too long');
+
     }else{
-      ccNumError.textContent = '';
-      ccNum.className = '';
-      ccNumError.className = '';
+      clearErrorMessage(ccNum, ccNumError)
     }
   })
-
+//validate zip
   const zip = document.getElementById('zip');
   const zipError = document.createElement('div')
   zipError.textContent = '';
   ccParent.insertBefore(zipError, ccNum.parentElement);
   zip.addEventListener('blur', () => {
     if(zip.value === ''){
-      zipError.textContent = 'you must add your zip number';
-      zip.className = 'error';
-      zipError.className = 'error-message';
+      errorMessages(zip, zipError, 'you must add your zip number');
     }
   })
   zip.addEventListener('keyup', () => {
     if(zip.value.length < 5){
-      zipError.textContent = 'Your zip code is not long enough';
-      zip.className = 'error';
-      zipError.className = 'error-message';
+      errorMessages(zip, zipError, 'Your zip code is not long enough');
     }else if(zip.value.length > 5){
-      zipError.textContent = 'your zip code is too long';
-      zip.className = 'error';
-      zipError.className = 'error-message';
+      errorMessages(zip, zipError, 'your zip code is too long');
     }else{
-      zipError.textContent = '';
-      zip.className = '';
-      zipError.className = '';
+      clearErrorMessage(zip, zipError)
     }
-
   })
+  //validate cvv
   const cvv = document.getElementById('cvv');
   const cvvError = document.createElement('div')
   cvvError.textContent = '';
   ccParent.insertBefore(cvvError, ccNum.parentElement);
   cvv.addEventListener('blur', () => {
     if(cvv.value === ''){
-      cvvError.textContent = 'you must add your cvv number';
-      cvv.className = 'error';
-      cvvError.className = 'error-message';
+      errorMessages(cvv, cvvError, 'you must add your cvv number');
     }
   })
   cvv.addEventListener('keyup', () => {
     if(cvv.value.length < 3){
-      cvvError.textContent = 'Your cvv number is not long enough';
-      cvv.className = 'error';
-      cvvError.className = 'error-message';
+      errorMessages(cvv, cvvError, 'Your cvv number is not long enough');
     }else if(cvv.value.length > 3){
-      cvvError.textContent = 'your cvv number is too long';
-      cvv.className = 'error';
-      cvvError.className = 'error-message';
+      errorMessages(cvv, cvvError, 'your cvv number is too long');
     }else{
-      cvvError.textContent = '';
-      cvv.className = '';
-      cvvError.className = '';
+      clearErrorMessage(cvv, cvvError)
     }
   })
 }
