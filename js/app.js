@@ -1,16 +1,18 @@
 //set focus to name field on load
 document.getElementById('name').focus();
 
-//add text field when Job Role of option is selected
+
+//display text field only when Job Role of option is selected
 const addTitle = () => {
   const title = document.getElementById('title');
+  const otherTitle = document.getElementById('other-title');
+  otherTitle.style.display = "none";
+
   title.addEventListener('change', (e) => {
     if(title.value === 'other') {
-      const input = document.createElement('input');
-      input.type = 'text';
-      input.id = 'other-title';
-      input.placeholder = 'Your Job Role';
-      title.parentNode.insertBefore(input, title.nextSibling);
+      otherTitle.style.display = "block";
+    }else{
+      otherTitle.style.display = "none";
     }
   });
 }
@@ -142,10 +144,145 @@ const paymentMethods = () => {
     }
   });
 }
+//prevent user from submitting form
+document.querySelector('form').addEventListener('submit', (e) => {
+  e.preventDefault();
+})
 
+
+
+
+// if(totalPrice === 0){
+//   console.log('you must select a checkbox')
+// }
+
+const validateFrom = () => {
+  const name = document.getElementById('name');
+  const basicInfo = name.parentElement;
+  const nameError = document.createElement('div')
+  nameError.textContent = '';
+  basicInfo.insertBefore(nameError, name);
+  name.addEventListener('blur', (e) => {
+    if(name.value === ''){
+      nameError.textContent = 'You must fill in in your name';
+      nameError.className = 'error-message';
+      name.className = 'error';
+    }else{
+      nameError.textContent = '';
+      nameError.className = '';
+      name.className = '';
+    }
+  })
+  const email = document.getElementById('mail');
+  const emailError = document.createElement('div')
+  emailError.textContent = '';
+  basicInfo.insertBefore(emailError, email);
+  const regex = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+  email.addEventListener('blur', () => {
+    if(email.value === ''){
+      emailError.textContent = 'You must fill in in your email';
+      emailError.className = 'error-message';
+      email.className = 'error';
+    }
+  })
+  email.addEventListener('keyup', () => {
+    if(!regex.test(email.value)){
+      emailError.textContent = 'Plese type a valid address eg email@email.com';
+      emailError.className = 'error-message';
+      email.className = 'error';
+    }else{
+      emailError.textContent = '';
+      emailError.className = '';
+      email.className = '';
+    }
+  })
+
+  const ccNum = document.getElementById('cc-num');
+  const ccNumError = document.createElement('div')
+  ccNumError.textContent = '';
+  const ccParent = document.getElementById('credit-card');
+  ccParent.insertBefore(ccNumError, ccNum.parentElement);
+  ccNum.addEventListener('blur', () => {
+    if(ccNum.value === ''){
+      ccNumError.textContent = 'you must add your credit card number or choose another payment type';
+      ccNum.className = 'error';
+      ccNumError.className = 'error-message';
+    }
+  })
+  ccNum.addEventListener('keyup', () => {
+    if(ccNum.value.length < 13){
+      ccNumError.textContent = 'Your credit car number is not long enough';
+      ccNum.className = 'error';
+      ccNumError.className = 'error-message';
+    }else if(ccNum.value.length > 16){
+      ccNumError.textContent = 'your credit card number is too long';
+      ccNum.className = 'error';
+      ccNumError.className = 'error-message';
+    }else{
+      ccNumError.textContent = '';
+      ccNum.className = '';
+      ccNumError.className = '';
+    }
+  })
+
+  const zip = document.getElementById('zip');
+  const zipError = document.createElement('div')
+  zipError.textContent = '';
+  ccParent.insertBefore(zipError, ccNum.parentElement);
+  zip.addEventListener('blur', () => {
+    if(zip.value === ''){
+      zipError.textContent = 'you must add your zip number';
+      zip.className = 'error';
+      zipError.className = 'error-message';
+    }
+  })
+  zip.addEventListener('keyup', () => {
+    if(zip.value.length < 5){
+      zipError.textContent = 'Your zip code is not long enough';
+      zip.className = 'error';
+      zipError.className = 'error-message';
+    }else if(zip.value.length > 5){
+      zipError.textContent = 'your zip code is too long';
+      zip.className = 'error';
+      zipError.className = 'error-message';
+    }else{
+      zipError.textContent = '';
+      zip.className = '';
+      zipError.className = '';
+    }
+
+  })
+  const cvv = document.getElementById('cvv');
+  const cvvError = document.createElement('div')
+  cvvError.textContent = '';
+  ccParent.insertBefore(cvvError, ccNum.parentElement);
+  cvv.addEventListener('blur', () => {
+    if(cvv.value === ''){
+      cvvError.textContent = 'you must add your cvv number';
+      cvv.className = 'error';
+      cvvError.className = 'error-message';
+    }
+  })
+  cvv.addEventListener('keyup', () => {
+    if(cvv.value.length < 3){
+      cvvError.textContent = 'Your cvv number is not long enough';
+      cvv.className = 'error';
+      cvvError.className = 'error-message';
+    }else if(cvv.value.length > 3){
+      cvvError.textContent = 'your cvv number is too long';
+      cvv.className = 'error';
+      cvvError.className = 'error-message';
+    }else{
+      cvvError.textContent = '';
+      cvv.className = '';
+      cvvError.className = '';
+    }
+  })
+}
 
 //call all functions
 hideColors();
 addTitle();
 availableActivities();
 paymentMethods();
+validateFrom();
