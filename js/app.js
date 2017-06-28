@@ -252,10 +252,10 @@ const validateEmail = () => {
 }
 //validate job Role
 const validateJob = () => {
-  if(title.value === 'other' ){
-    if(otherTitle.value === ''){
+  if (title.value === 'other') {
+    if (otherTitle.value === '') {
       errorMessages(otherTitle, jobError, 'You must fill in your Job Role');
-    }else{
+    } else {
       jobValid = true;
       clearErrorMessage(otherTitle, jobError);
     }
