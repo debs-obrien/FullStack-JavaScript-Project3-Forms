@@ -1,22 +1,32 @@
 /*
 created by Debbie O'Brien 28 June 2017
-Form validation project for javascript Full Stack
+Form validation project for Javasscript Full Stack Project 3
  */
-
-//set focus to name field on load
-document.getElementById('name').focus();
-
 //select elements
 const form = document.querySelector('form');
 const submit = document.querySelector('button');
-const npm = document.getElementsByName('npm')[0];
-const name = document.getElementById('name');
-const email = document.getElementById('mail');
-const title = document.getElementById('title');
+const nameField = document.getElementById('name');
+const emailField = document.getElementById('mail');
+const jobTitle = document.getElementById('title');
 const otherTitle = document.getElementById('other-title');
-const ccNum = document.getElementById('cc-num');
-const zip = document.getElementById('zip');
-const cvv = document.getElementById('cvv');
+const ccNumField = document.getElementById('cc-num');
+const zipField = document.getElementById('zip');
+const cvvField = document.getElementById('cvv');
+const mainConference = document.getElementsByName('all')[0];
+const jsFrameworks = document.getElementsByName('js-frameworks')[0];
+const jsLibs = document.getElementsByName('js-libs')[0];
+const buildTools = document.getElementsByName('build-tools')[0];
+const express = document.getElementsByName('express')[0];
+const node = document.getElementsByName('node')[0];
+const npm = document.getElementsByName('npm')[0];
+const price = document.createElement('div');
+const design = document.getElementById('design');
+const color = document.getElementById('color');
+const colorDiv = document.getElementById('colors-js-puns');
+const paymentMethod = document.getElementById('payment');
+const creditCard = document.getElementById('credit-card');
+const bitcoinMethod = document.getElementById('bitcoin');
+const paypalMethod = document.getElementById('paypal');
 //create divs for error messages
 const nameError = document.createElement('div')
 const emailError = document.createElement('div');
@@ -26,31 +36,38 @@ const ccNumError = document.createElement('div');
 const zipError = document.createElement('div');
 const cvvError = document.createElement('div');
 //insert divs with error messages
-const basicInfo = name.parentElement;
+const basicInfoSection = nameField.parentElement;
 const ccParent = document.getElementById('credit-card');
-basicInfo.insertBefore(nameError, name);
-basicInfo.insertBefore(emailError, email);
+basicInfoSection.insertBefore(nameError, nameField);
+basicInfoSection.insertBefore(emailError, emailField);
 otherTitle.after(jobError);
-ccParent.insertBefore(ccNumError, ccNum.parentElement);
-ccParent.insertBefore(zipError, ccNum.parentElement);
-ccParent.insertBefore(cvvError, ccNum.parentElement);
+ccParent.insertBefore(ccNumError, ccNumField.parentElement);
+ccParent.insertBefore(zipError, ccNumField.parentElement);
+ccParent.insertBefore(cvvError, ccNumField.parentElement);
 //set values
+const regex = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
 let numOfActivities = 0;
+let totalPrice = 0;
+let mainConfPrice = 200;
+let workshopPrice = 100;
 let empty = true;
 let nameValid = false;
 let emailValid = false;
-let jobValid = false;
+let jobValid = true;
 let activityValid = false;
 let ccNumValid = false;
 let zipValid = false;
 let cvvValid = false;
+
+//set focus to name field on load
+nameField.focus();
 
 //display text field only when Job Role of option is selected
 const addTitle = () => {
   otherTitle.style.display = "none";
 
   title.addEventListener('change', (e) => {
-    if (title.value === 'other') {
+    if (jobTitle.value === 'other') {
       otherTitle.style.display = "block";
     } else {
       otherTitle.style.display = "none";
@@ -62,10 +79,6 @@ const addTitle = () => {
 
 //hide all other colors only show ones we want
 const hideColors = () => {
-  const design = document.getElementById('design');
-  const color = document.getElementById('color');
-  const colorDiv = document.getElementById('colors-js-puns');
-
   color.innerHTML = ''; //set all color options to empty so can be refilled based on selection
   colorDiv.style.display = 'none';
 
@@ -101,7 +114,7 @@ const checkActivities = (checkedOption, activity) => {
 
 //create error message if no activities selected
 const activitiesError = () => {
-  if (numOfActivities === 0) {
+  if (!numOfActivities) {
     npm.parentElement.after(activityError);
     activityError.textContent = 'You need to select an activity';
     activityError.className = 'error-message';
@@ -112,17 +125,6 @@ const activitiesError = () => {
 
 //dont allow selection if same date/time
 const availableActivities = () => {
-  const mainConference = document.getElementsByName('all')[0];
-  const jsFrameworks = document.getElementsByName('js-frameworks')[0];
-  const jsLibs = document.getElementsByName('js-libs')[0];
-  const buildTools = document.getElementsByName('build-tools')[0];
-  const express = document.getElementsByName('express')[0];
-  const node = document.getElementsByName('node')[0];
-  const npm = document.getElementsByName('npm')[0];
-  const price = document.createElement('div');
-  let totalPrice = 0;
-  let mainConfPrice = 200;
-  let workshopPrice = 100;
   //create div to hold price
   const activitiesPrice = () => {
     price.id = 'price';
@@ -130,7 +132,7 @@ const availableActivities = () => {
   }
   //print the price
   const printPrice = (totalPrice) => {
-    if (totalPrice !== 0) {
+    if (totalPrice) {
       price.innerHTML = 'Total Price: $' + totalPrice;
     } else {
       price.innerHTML = '';
@@ -141,6 +143,7 @@ const availableActivities = () => {
     if (option.checked) {
       totalPrice += price;
       printPrice(totalPrice)
+      activityValid = true;
     } else {
       totalPrice -= price;
       printPrice(totalPrice)
@@ -187,31 +190,28 @@ const availableActivities = () => {
 
 //hide or show payment methods depending on selection
 const paymentMethods = () => {
-  const paymentMethod = document.getElementById('payment');
-  const creditCard = document.getElementById('credit-card');
-  const bitcoin = document.getElementById('bitcoin');
-  const paypal = document.getElementById('paypal');
-  bitcoin.style.display = 'none';
-  paypal.style.display = 'none';
+  bitcoinMethod.style.display = 'none';
+  paypalMethod.style.display = 'none';
 
   paymentMethod.addEventListener('change', () => {
     //if other payment method chosen set credit card Validation to true
     if (paymentMethod.value === 'bitcoin' || paymentMethod.value === 'paypal') {
+      creditCard.style.display = 'none';
       ccNumValid = true;
       zipValid = true;
       cvvValid = true;
     }
-    bitcoin.style.display = 'none';
-    paypal.style.display = 'none';
     if (paymentMethod.value === 'select_method' || paymentMethod.value === 'credit card') {
       creditCard.style.display = 'block';
+      bitcoinMethod.style.display = 'none';
+      paypalMethod.style.display = 'none';
       //hide others
     } else if (paymentMethod.value === 'paypal') {
-      paypal.style.display = 'block';
-      creditCard.style.display = 'none';
+      paypalMethod.style.display = 'block';
+      bitcoinMethod.style.display = 'none';
     } else if (paymentMethod.value === 'bitcoin') {
-      bitcoin.style.display = 'block';
-      creditCard.style.display = 'none';
+      bitcoinMethod.style.display = 'block';
+      paypalMethod.style.display = 'none';
     }
 
   });
@@ -219,7 +219,7 @@ const paymentMethods = () => {
 
 //empty field validation
 function ifEmpty(input, errorDiv, errorMessage) {
-  if (input.value === '') {
+  if (!input.value) {
     errorMessages(input, errorDiv, errorMessage);
   } else {
     clearErrorMessage(input, errorDiv)
@@ -240,110 +240,113 @@ function clearErrorMessage(input, errorDiv) {
 }
 //validate Name
 const validateName = () => {
-  ifEmpty(name, nameError, 'You must fill in in your name');
-  if (name.value !== '') {
+  ifEmpty(nameField, nameError, 'You must fill in in your name');
+  if (nameField.value) {
     nameValid = true;
   }
 }
 //validate email
 const validateEmail = () => {
-  const regex = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
-  if (!regex.test(email.value)) {
-    errorMessages(email, emailError, 'Plese type a valid address eg email@email.com');
+
+  if (!regex.test(emailField.value)) {
+    errorMessages(emailField, emailError, 'Plese type a valid address eg email@email.com');
   } else {
-    clearErrorMessage(email, emailError);
+    clearErrorMessage(emailField, emailError);
     emailValid = true;
   }
 }
 //validate job Role
 const validateJob = () => {
-  if (title.value === 'other') {
-    if (otherTitle.value === '') {
+  if (jobTitle.value === 'other') {
+    if (!otherTitle.value) {
       errorMessages(otherTitle, jobError, 'You must fill in your Job Role');
     } else {
-      jobValid = true;
       clearErrorMessage(otherTitle, jobError);
+      jobValid = true;
     }
   }
 }
 
 //validate cc Number
 const validateCCNum = () => {
-  if (isNaN(ccNum.value)) {
-    errorMessages(ccNum, ccNumError, 'Credit Card numbers need to be a number');
-  } else if (ccNum.value.length < 13) {
-    errorMessages(ccNum, ccNumError, 'Your credit car number needs to be min 13 digits');
-  } else if (ccNum.value.length > 16) {
-    errorMessages(ccNum, ccNumError, 'your credit card number needs to be max 16 digits');
+  if (isNaN(ccNumField.value)) {
+    errorMessages(ccNumField, ccNumError, 'Credit Card numbers need to be a number');
+  } else if (ccNumField.value.length < 13 || ccNumField.value.length > 16) {
+    errorMessages(ccNumField, ccNumError, 'Your credit car number needs to be min 13 digits and max 16 digits');
   } else {
-    clearErrorMessage(ccNum, ccNumError);
+    clearErrorMessage(ccNumField, ccNumError);
     ccNumValid = true;
   }
 }
 //validate zip
 const validateZip = () => {
-  if (isNaN(zip.value)) {
-    errorMessages(zip, zipError, 'zips need to be a number');
-  } else if (zip.value.length < 5) {
-    errorMessages(zip, zipError, 'Your zip code needs to be min 5 digits');
-  } else if (zip.value.length > 5) {
-    errorMessages(zip, zipError, 'your zip code needs to be max 5 digits');
+  if (isNaN(zipField.value)) {
+    errorMessages(zipField, zipError, 'zips need to be a number');
+  } else if (zipField.value.length < 5 || zipField.value.length > 5) {
+    errorMessages(zipField, zipError, 'Your zip code needs to be min 5 digits and max 5 digits');
   } else {
-    clearErrorMessage(zip, zipError);
+    clearErrorMessage(zipField, zipError);
     zipValid = true;
   }
 }
 //validate cvv
 const validateCvv = () => {
-  if (isNaN(cvv.value)) {
-    errorMessages(cvv, cvvError, 'cvv needs to be a number');
-  } else if (cvv.value.length < 3) {
-    errorMessages(cvv, cvvError, 'Your cvv number needs to be max 3 digits');
-  } else if (cvv.value.length > 3) {
-    errorMessages(cvv, cvvError, 'your cvv number needs to be min 3 digits');
+  if (isNaN(cvvField.value)) {
+    errorMessages(cvvField, cvvError, 'cvv needs to be a number');
+  } else if (cvvField.value.length < 3 || cvvField.value.length > 3) {
+    errorMessages(cvvField, cvvError, 'Your cvv number needs to be 3 digits');
   } else {
-    clearErrorMessage(cvv, cvvError);
+    clearErrorMessage(cvvField, cvvError);
     cvvValid = true;
   }
 }
-name.addEventListener('blur', () => {
+nameField.addEventListener('blur', () => {
   validateName();
 })
-email.addEventListener('keyup', () => {
+emailField.addEventListener('keyup', () => {
   validateEmail();
 })
-otherTitle.addEventListener('blur', () => {
+jobTitle.addEventListener('change', () => {
+  if(jobTitle.value === 'other'){
+    jobValid = false;
+  }
+})
+otherTitle.addEventListener('keyup', () => {
   validateJob();
 })
-ccNum.addEventListener('keyup', () => {
+ccNumField.addEventListener('keyup', () => {
   validateCCNum();
 })
-zip.addEventListener('keyup', () => {
+zipField.addEventListener('keyup', () => {
   validateZip();
 })
-cvv.addEventListener('keyup', () => {
+cvvField.addEventListener('keyup', () => {
   validateCvv();
 })
 //validate form
 const validateFrom = () => {
   activitiesError();
-  ifEmpty(name, nameError, 'You must fill in in your name');
-  ifEmpty(email, emailError, 'You must fill in in your email');
-  ifEmpty(ccNum, ccNumError, 'you must add your credit card number or choose another payment type');
-  ifEmpty(zip, zipError, 'you must add your zip number');
-  ifEmpty(cvv, cvvError, 'you must add your cvv number');
+  ifEmpty(nameField, nameError, 'You must fill in in your name');
+  ifEmpty(emailField, emailError, 'You must fill in in your email');
+  ifEmpty(ccNumField, ccNumError, 'you must add your credit card number or choose another payment type');
+  ifEmpty(zipField, zipError, 'you must add your zip number');
+  ifEmpty(cvvField, cvvError, 'you must add your cvv number');
   //if fields are not empty validate further
-  if (email.value !== '') {
+  if (emailField.value) {
     validateEmail();
   }
-  if (ccNum.value !== '') {
+  if (ccNumField.value) {
     validateCCNum();
   }
-  if (zip.value !== '') {
+  if (zipField.value) {
     validateZip();
   }
-  if (cvv.value !== '') {
+  if (cvvField.value) {
     validateCvv();
+  }
+  if (jobTitle.value === 'other'){
+    jobValid = false;
+    validateJob();
   }
 }
 
