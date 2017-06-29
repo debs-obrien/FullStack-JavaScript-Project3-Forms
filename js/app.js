@@ -45,7 +45,7 @@ ccParent.insertBefore(ccNumError, ccNumField.parentElement);
 ccParent.insertBefore(zipError, ccNumField.parentElement);
 ccParent.insertBefore(cvvError, ccNumField.parentElement);
 //set values
-const regex = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+const regex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 let numOfActivities = 0;
 let totalPrice = 0;
 let mainConfPrice = 200;
@@ -188,10 +188,14 @@ const availableActivities = () => {
   disableIfChecked(node, jsLibs);
 };
 
+//set payment method to creditcard
+paymentMethod.options[1].setAttribute('selected', 'selected');
+
 //hide or show payment methods depending on selection
 const paymentMethods = () => {
   bitcoinMethod.style.display = 'none';
   paypalMethod.style.display = 'none';
+
 
   paymentMethod.addEventListener('change', () => {
     //if other payment method chosen set credit card Validation to true
@@ -212,6 +216,8 @@ const paymentMethods = () => {
     } else if (paymentMethod.value === 'bitcoin') {
       bitcoinMethod.style.display = 'block';
       paypalMethod.style.display = 'none';
+    }else if(paymentMethod.value === 'select_method'){
+
     }
 
   });
@@ -248,11 +254,12 @@ const validateName = () => {
 //validate email
 const validateEmail = () => {
 
-  if (!regex.test(emailField.value)) {
-    errorMessages(emailField, emailError, 'Plese type a valid address eg email@email.com');
-  } else {
+  if (regex.test(emailField.value)) {
     clearErrorMessage(emailField, emailError);
     emailValid = true;
+  } else {
+    errorMessages(emailField, emailError, 'Plese type a valid address eg email@email.com');
+    emailValid = false;
   }
 }
 //validate job Role
@@ -303,7 +310,7 @@ const validateCvv = () => {
 nameField.addEventListener('blur', () => {
   validateName();
 })
-emailField.addEventListener('keyup', () => {
+emailField.addEventListener('blur', () => {
   validateEmail();
 })
 jobTitle.addEventListener('change', () => {
@@ -311,16 +318,16 @@ jobTitle.addEventListener('change', () => {
     jobValid = false;
   }
 })
-otherTitle.addEventListener('keyup', () => {
+otherTitle.addEventListener('blur', () => {
   validateJob();
 })
-ccNumField.addEventListener('keyup', () => {
+ccNumField.addEventListener('blur', () => {
   validateCCNum();
 })
-zipField.addEventListener('keyup', () => {
+zipField.addEventListener('blur', () => {
   validateZip();
 })
-cvvField.addEventListener('keyup', () => {
+cvvField.addEventListener('blur', () => {
   validateCvv();
 })
 //validate form
