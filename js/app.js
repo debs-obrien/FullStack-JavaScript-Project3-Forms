@@ -20,8 +20,8 @@ const express = document.getElementsByName('express')[0];
 const node = document.getElementsByName('node')[0];
 const npm = document.getElementsByName('npm')[0];
 const price = document.createElement('div');
-const design = document.getElementById('design');
-const color = document.getElementById('color');
+const themeDesign = document.getElementById('design');
+const themeColor = document.getElementById('color');
 const colorDiv = document.getElementById('colors-js-puns');
 const paymentMethod = document.getElementById('payment');
 const creditCard = document.getElementById('credit-card');
@@ -79,23 +79,23 @@ const addTitle = () => {
 
 //hide all other colors only show ones we want
 const hideColors = () => {
-  color.innerHTML = ''; //set all color options to empty so can be refilled based on selection
+  themeColor.innerHTML = ''; //set all color options to empty so can be refilled based on selection
   colorDiv.style.display = 'none';
 
-  design.addEventListener('change', () => {
-    if (design.value.includes('Select Theme')) {
+  themeDesign.addEventListener('change', () => {
+    if (themeDesign.value.includes('Select Theme')) {
       colorDiv.style.display = 'none';
     } else {
       colorDiv.style.display = 'block';
-      if (design.value.includes('js puns')) {
-        color.innerHTML = '<option value="cornflowerblue">Cornflower Blue (JS Puns shirt only)</option>'
-        color.innerHTML += '<option value="darkslategrey">Dark Slate Grey (JS Puns shirt only)</option>'
-        color.innerHTML += '<option value="gold">Gold (JS Puns shirt only)</option>';
+      if (themeDesign.value.includes('js puns')) {
+        themeColor.innerHTML = '<option value="cornflowerblue">Cornflower Blue (JS Puns shirt only)</option>'
+        themeColor.innerHTML += '<option value="darkslategrey">Dark Slate Grey (JS Puns shirt only)</option>'
+        themeColor.innerHTML += '<option value="gold">Gold (JS Puns shirt only)</option>';
 
-      } else if (design.value.includes('heart js')) {
-        color.innerHTML = '<option value="tomato">Tomato (I &#9829; JS shirt only)</option>'
-        color.innerHTML += '<option value="steelblue">Steel Blue (I &#9829; JS shirt only)</option>'
-        color.innerHTML += '<option value="dimgrey">Dim Grey (I &#9829; JS shirt only)</option>';
+      } else if (themeDesign.value.includes('heart js')) {
+        themeColor.innerHTML = '<option value="tomato">Tomato (I &#9829; JS shirt only)</option>'
+        themeColor.innerHTML += '<option value="steelblue">Steel Blue (I &#9829; JS shirt only)</option>'
+        themeColor.innerHTML += '<option value="dimgrey">Dim Grey (I &#9829; JS shirt only)</option>';
       }
     }
 
