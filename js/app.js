@@ -1,9 +1,8 @@
 /*
 created by Debbie O'Brien 28 June 2017
-Form validation project for Javasscript Full Stack Project 3
+Form validation project for JavaScript Full Stack Project 3
  */
 //select elements
-const form = document.querySelector('form');
 const submit = document.querySelector('button');
 const nameField = document.getElementById('name');
 const emailField = document.getElementById('mail');
@@ -28,7 +27,7 @@ const creditCard = document.getElementById('credit-card');
 const bitcoinMethod = document.getElementById('bitcoin');
 const paypalMethod = document.getElementById('paypal');
 //create divs for error messages
-const nameError = document.createElement('div')
+const nameError = document.createElement('div');
 const emailError = document.createElement('div');
 const jobError = document.createElement('div');
 const activityError = document.createElement('div');
@@ -40,7 +39,6 @@ const basicInfoSection = nameField.parentElement;
 const ccParent = document.getElementById('credit-card');
 basicInfoSection.insertBefore(nameError, nameField);
 basicInfoSection.insertBefore(emailError, emailField);
-otherTitle.after(jobError);
 ccParent.insertBefore(ccNumError, ccNumField.parentElement);
 ccParent.insertBefore(zipError, ccNumField.parentElement);
 ccParent.insertBefore(cvvError, ccNumField.parentElement);
@@ -50,7 +48,6 @@ let numOfActivities = 0;
 let totalPrice = 0;
 let mainConfPrice = 200;
 let workshopPrice = 100;
-let empty = true;
 let nameValid = false;
 let emailValid = false;
 let jobValid = true;
@@ -66,7 +63,7 @@ nameField.focus();
 const addTitle = () => {
   otherTitle.style.display = "none";
 
-  title.addEventListener('change', (e) => {
+  jobTitle.addEventListener('change', () => {
     if (jobTitle.value === 'other') {
       otherTitle.style.display = "block";
     } else {
@@ -74,7 +71,7 @@ const addTitle = () => {
       jobValid = true;
     }
   });
-}
+};
 
 
 //hide all other colors only show ones we want
@@ -100,36 +97,37 @@ const hideColors = () => {
     }
 
   });
-}
+};
 //check if there are activities selected
-const checkActivities = (checkedOption, activity) => {
+const checkActivities = (checkedOption) => {
   if (checkedOption.checked) {
     numOfActivities += 1;
     activityError.remove();
   } else {
-    numOfActivities -= 1
+    numOfActivities -= 1;
     activitiesError();
   }
-}
+};
 
 //create error message if no activities selected
 const activitiesError = () => {
   if (!numOfActivities) {
-    npm.parentElement.after(activityError);
+    npm.parentNode.insertBefore(activityError, npm.nextSibling.nextSibling);
     activityError.textContent = 'You need to select an activity';
     activityError.className = 'error-message';
+    activityValid = false;
   } else {
     activityValid = true;
   }
-}
+};
 
 //dont allow selection if same date/time
 const availableActivities = () => {
   //create div to hold price
   const activitiesPrice = () => {
     price.id = 'price';
-    npm.parentElement.after(price);
-  }
+      npm.parentNode.insertBefore(price, npm.nextSibling.nextSibling);
+  };
   //print the price
   const printPrice = (totalPrice) => {
     if (totalPrice) {
@@ -137,18 +135,18 @@ const availableActivities = () => {
     } else {
       price.innerHTML = '';
     }
-  }
+  };
   //calculate the price
   const calculatePrice = (option, price) => {
     if (option.checked) {
       totalPrice += price;
-      printPrice(totalPrice)
+      printPrice(totalPrice);
       activityValid = true;
     } else {
       totalPrice -= price;
       printPrice(totalPrice)
     }
-  }
+  };
   //function to disable checkbox
   function disable(option) {
     option.disabled = true;
@@ -157,15 +155,15 @@ const availableActivities = () => {
   function enable(option) {
     option.disabled = false;
   }
-  //function to check if checked and calcualte price
+  //function to check if checked and calculate price
   const checkIfChecked = (checkedOption, price) => {
     checkedOption.addEventListener('change', () => {
       checkedOption.setAttribute("checked", "checked");
       checkActivities(checkedOption);
       calculatePrice(checkedOption, price);
     });
-  }
-  //function to check if checked, disable options of same time and call calcualte price
+  };
+  //function to check if checked, disable options of same time and call calculate price
   const disableIfChecked = (checkedOption, disabledOption) => {
     checkedOption.addEventListener('change', () => {
       checkedOption.setAttribute("checked", "checked");
@@ -173,29 +171,28 @@ const availableActivities = () => {
       checkActivities(checkedOption);
       calculatePrice(checkedOption, workshopPrice);
     });
-  }
+  };
   //call the activitiesPrice function to append price div
   activitiesPrice();
 
-  //listen for changes to click and calcualte price
+  //listen for changes to click and calculate price
   checkIfChecked(mainConference, mainConfPrice);
   checkIfChecked(buildTools, workshopPrice);
   checkIfChecked(npm, workshopPrice);
-  //listen for changes to click, disable checkboxes and calcualte price
+  //listen for changes to click, disable checkboxes and calculate price
   disableIfChecked(jsFrameworks, express);
   disableIfChecked(jsLibs, node);
   disableIfChecked(express, jsFrameworks);
   disableIfChecked(node, jsLibs);
 };
 
-//set payment method to creditcard
+//set payment method to credit card
 paymentMethod.options[1].setAttribute('selected', 'selected');
 
 //hide or show payment methods depending on selection
 const paymentMethods = () => {
   bitcoinMethod.style.display = 'none';
   paypalMethod.style.display = 'none';
-
 
   paymentMethod.addEventListener('change', () => {
     //if other payment method chosen set credit card Validation to true
@@ -209,6 +206,9 @@ const paymentMethods = () => {
       creditCard.style.display = 'block';
       bitcoinMethod.style.display = 'none';
       paypalMethod.style.display = 'none';
+      ccNumValid = false;
+      zipValid = false;
+      cvvValid = false;
       //hide others
     } else if (paymentMethod.value === 'paypal') {
       paypalMethod.style.display = 'block';
@@ -216,12 +216,9 @@ const paymentMethods = () => {
     } else if (paymentMethod.value === 'bitcoin') {
       bitcoinMethod.style.display = 'block';
       paypalMethod.style.display = 'none';
-    }else if(paymentMethod.value === 'select_method'){
-
     }
-
   });
-}
+};
 
 //empty field validation
 function ifEmpty(input, errorDiv, errorMessage) {
@@ -250,7 +247,7 @@ const validateName = () => {
   if (nameField.value) {
     nameValid = true;
   }
-}
+};
 //validate email
 const validateEmail = () => {
 
@@ -258,10 +255,10 @@ const validateEmail = () => {
     clearErrorMessage(emailField, emailError);
     emailValid = true;
   } else {
-    errorMessages(emailField, emailError, 'Plese type a valid address eg email@email.com');
+    errorMessages(emailField, emailError, 'Please type a valid address eg email@email.com');
     emailValid = false;
   }
-}
+};
 //validate job Role
 const validateJob = () => {
   if (jobTitle.value === 'other') {
@@ -272,7 +269,7 @@ const validateJob = () => {
       jobValid = true;
     }
   }
-}
+};
 
 //validate cc Number
 const validateCCNum = () => {
@@ -284,7 +281,7 @@ const validateCCNum = () => {
     clearErrorMessage(ccNumField, ccNumError);
     ccNumValid = true;
   }
-}
+};
 //validate zip
 const validateZip = () => {
   if (isNaN(zipField.value)) {
@@ -295,7 +292,7 @@ const validateZip = () => {
     clearErrorMessage(zipField, zipError);
     zipValid = true;
   }
-}
+};
 //validate cvv
 const validateCvv = () => {
   if (isNaN(cvvField.value)) {
@@ -306,30 +303,31 @@ const validateCvv = () => {
     clearErrorMessage(cvvField, cvvError);
     cvvValid = true;
   }
-}
+};
+
 nameField.addEventListener('blur', () => {
   validateName();
-})
+});
 emailField.addEventListener('blur', () => {
   validateEmail();
-})
+});
 jobTitle.addEventListener('change', () => {
   if(jobTitle.value === 'other'){
     jobValid = false;
   }
-})
+});
 otherTitle.addEventListener('blur', () => {
   validateJob();
-})
+});
 ccNumField.addEventListener('blur', () => {
   validateCCNum();
-})
+});
 zipField.addEventListener('blur', () => {
   validateZip();
-})
+});
 cvvField.addEventListener('blur', () => {
   validateCvv();
-})
+});
 //validate form
 const validateFrom = () => {
   activitiesError();
@@ -355,7 +353,7 @@ const validateFrom = () => {
     jobValid = false;
     validateJob();
   }
-}
+};
 
 //call all functions
 hideColors();
@@ -365,10 +363,10 @@ paymentMethods();
 
 //submit form on click if everything validates
 submit.addEventListener('click', (e) => {
-  //let allFields = fields requred to be validated
+  //let allFields = fields required to be validated
   let allValid = nameValid && emailValid && jobValid && activityValid && zipValid && ccNumValid && cvvValid;
   if (!allValid) { //if not true prevent submit and call validate
     e.preventDefault();
     validateFrom();
   }
-})
+});
