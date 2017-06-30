@@ -39,6 +39,7 @@ const basicInfoSection = nameField.parentElement;
 const ccParent = document.getElementById('credit-card');
 basicInfoSection.insertBefore(nameError, nameField);
 basicInfoSection.insertBefore(emailError, emailField);
+basicInfoSection.insertBefore(jobError, otherTitle);
 ccParent.insertBefore(ccNumError, ccNumField.parentElement);
 ccParent.insertBefore(zipError, ccNumField.parentElement);
 ccParent.insertBefore(cvvError, ccNumField.parentElement);
@@ -250,7 +251,6 @@ const validateName = () => {
 };
 //validate email
 const validateEmail = () => {
-
   if (regex.test(emailField.value)) {
     clearErrorMessage(emailField, emailError);
     emailValid = true;
@@ -261,13 +261,12 @@ const validateEmail = () => {
 };
 //validate job Role
 const validateJob = () => {
-  if (jobTitle.value === 'other') {
-    if (!otherTitle.value) {
+  if (jobTitle.value === 'other' && !otherTitle.value) {
       errorMessages(otherTitle, jobError, 'You must fill in your Job Role');
-    } else {
+        jobValid = false;
+  }else {
       clearErrorMessage(otherTitle, jobError);
       jobValid = true;
-    }
   }
 };
 
@@ -314,6 +313,9 @@ emailField.addEventListener('blur', () => {
 jobTitle.addEventListener('change', () => {
   if(jobTitle.value === 'other'){
     jobValid = false;
+  }else{
+      clearErrorMessage(otherTitle, jobError);
+      jobValid = true;
   }
 });
 otherTitle.addEventListener('blur', () => {
