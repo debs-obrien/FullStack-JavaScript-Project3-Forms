@@ -8,7 +8,6 @@
 - Form validation - validate before send, include error messages
 
 ### Author
-Debbie O'Brien
+Debbie O'Brien 29 June 2017
 
-### date
-29 June 2017
+* https://debs-obrien.github.io/FullStack-Project-3-Forms/
