@@ -10,4 +10,4 @@
 ### Author
 Debbie O'Brien 29 June 2017
 
-* https://debs-obrien.github.io/FullStack-Project-3-Forms/
+* https://debs-obrien.github.io/FullStack-JavaScript-Project3-Forms/
